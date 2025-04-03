@@ -7,9 +7,8 @@ from robocorp import workitems
 http=HTTP()
 json=JSON()
 table=Tables()
-json_file="output/traffic.json"
 
-
+TRAFFIC_JSON_FILE_PATH = "output/traffic.json"
 # JSON data keys
 COUNTRY_KEY = "SpatialDim"
 YEAR_KEY = "TimeDim"
@@ -28,12 +27,15 @@ def produce_traffic_data():
         target_file="output/traffic.json",
         overwrite=True,
     )
-    traffic_data= load_traffic_data_as_table()
+    traffic_data = load_traffic_data_as_table()
     filtered_data = filter_and_sort_traffic_data(traffic_data)
-    table.write_table_to_csv(filtered_data,"output/traffic.csv")
-    
+    filtered_data = get_latest_data_by_country(filtered_data)
+    payloads = create_work_item_payloads(filtered_data)
+    save_work_item_payloads(payloads)
+
+
 def load_traffic_data_as_table():
-    json_data = json.load_json_from_file(json_file)
+    json_data = json.load_json_from_file(TRAFFIC_JSON_FILE_PATH)
     table_from_json = table.create_table(json_data["value"])
     return table_from_json
 
