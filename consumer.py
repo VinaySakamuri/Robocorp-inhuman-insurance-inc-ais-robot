@@ -1,6 +1,6 @@
-from robocorp.tasks import task
 import requests
 from robocorp import workitems
+from robocorp.tasks import task
 
 @task
 def consume_traffic_data():
@@ -27,7 +27,6 @@ def consume_traffic_data():
                 message=item.payload,
             )
 
-    
 def post_traffic_data_to_sales_system(traffic_data):
     url = "https://robocorp.com/inhuman-insurance-inc/sales-system-api"
     response = requests.post(url, json=traffic_data)
